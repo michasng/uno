@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uno/pages/play/widgets/game_view.dart';
 
 class PlayPage extends StatelessWidget {
   const PlayPage({super.key});
@@ -6,7 +7,12 @@ class PlayPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text('The game will be playable here')),
+      backgroundColor: Colors.green[900],
+      body: Container(
+        padding: EdgeInsets.all(16),
+        alignment: Alignment.center,
+        child: GameView(),
+      ),
     );
   }
 }
