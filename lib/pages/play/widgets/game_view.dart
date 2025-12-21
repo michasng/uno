@@ -54,7 +54,10 @@ class _GameViewState extends State<GameView> {
           children: [
             buildHandView(1),
             PlayedStackView(cards: gameState.playedStack),
-            DrawStackView(cards: gameState.drawStack, onTap: onTapDrawStack),
+            DrawStackView(
+              cards: gameState.drawStack,
+              onTap: gameState.isGameOver ? null : onTapDrawStack,
+            ),
             buildHandView(3),
           ],
         ),
@@ -67,9 +70,10 @@ class _GameViewState extends State<GameView> {
     return HandView(
       cards: gameState.players[playerIndex].hand,
       isVisible: true,
-      onTapCard: gameState.turnPlayerIndex == playerIndex
-          ? (card) => onTapCard(card, playerIndex)
-          : null,
+      onTapCard:
+          gameState.isGameOver || gameState.turnPlayerIndex != playerIndex
+          ? null
+          : (card) => onTapCard(card, playerIndex),
     );
   }
 }

@@ -5,7 +5,7 @@ import 'package:uno/pages/play/widgets/game_card_view.dart';
 
 class DrawStackView extends StatelessWidget {
   final IList<GameCard> cards;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const DrawStackView({super.key, required this.cards, required this.onTap});
 

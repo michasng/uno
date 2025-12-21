@@ -17,6 +17,7 @@ class GameState with GameStateMappable {
   final int turnPlayerIndex;
   final bool isClockwise;
   final CardColor? mandatoryColor;
+  final bool isGameOver;
 
   const GameState({
     this.rngSeed = 0,
@@ -26,9 +27,8 @@ class GameState with GameStateMappable {
     this.turnPlayerIndex = 0,
     this.isClockwise = true,
     this.mandatoryColor,
+    this.isGameOver = false,
   });
 
   PlayerState get turnPlayer => players[turnPlayerIndex];
-  int get nextTurnPlayerIndex =>
-      (turnPlayerIndex + (isClockwise ? 1 : -1)) % players.length;
 }
