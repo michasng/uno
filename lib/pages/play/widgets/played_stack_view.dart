@@ -19,9 +19,7 @@ class PlayedStackView extends StatelessWidget {
         ),
         border: BoxBorder.all(color: Colors.red, width: 2),
       ),
-      child: cards.isEmpty
-          ? null
-          : GameCardView.fromGameCard(cards.last, isVisible: true),
+      child: cards.isEmpty ? null : GameCardView(cards.last, isVisible: true),
     );
   }
 }

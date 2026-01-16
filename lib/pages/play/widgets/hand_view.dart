@@ -30,7 +30,7 @@ class HandView extends StatelessWidget {
             alignment: WrapAlignment.center,
             children: [
               for (final card in cards)
-                GameCardView.fromGameCard(
+                GameCardView(
                   card,
                   isVisible: isVisible,
                   onTap: () => onTapCard?.call(card),

@@ -9,21 +9,32 @@ class GameCardView extends StatelessWidget {
   static const int height = 96;
   static const int cornerRadius = 8;
 
-  final Color color;
-  final String label;
+  final GameCard card;
   final bool isVisible;
   final VoidCallback? onTap;
 
-  const GameCardView({
+  const GameCardView(
+    this.card, {
     super.key,
-    required this.color,
-    required this.label,
     required this.isVisible,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    final card = this.card; // to enable type-narrowing
+    final color = card is ColoredCard
+        ? switch (card.color) {
+            CardColor.red => Colors.red,
+            CardColor.blue => Colors.blue,
+            CardColor.green => Colors.green,
+            CardColor.yellow => Colors.yellow,
+          }
+        : Colors.black;
+    final label = card is NumberedCard
+        ? card.number.toString()
+        : card.runtimeType.toString();
+
     return Container(
       width: width.toDouble(),
       height: height.toDouble(),
@@ -53,29 +64,6 @@ class GameCardView extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  factory GameCardView.fromGameCard(
-    GameCard card, {
-    required bool isVisible,
-    VoidCallback? onTap,
-  }) {
-    return GameCardView(
-      key: ValueKey(card.id),
-      onTap: onTap,
-      color: card is ColoredCard
-          ? switch (card.color) {
-              CardColor.red => Colors.red,
-              CardColor.blue => Colors.blue,
-              CardColor.green => Colors.green,
-              CardColor.yellow => Colors.yellow,
-            }
-          : Colors.black,
-      label: card is NumberedCard
-          ? card.number.toString()
-          : card.runtimeType.toString(),
-      isVisible: isVisible,
     );
   }
 }

@@ -24,7 +24,7 @@ class DrawStackView extends StatelessWidget {
         onTap: onTap,
         child: cards.isEmpty
             ? Container()
-            : GameCardView.fromGameCard(cards.last, isVisible: false),
+            : GameCardView(cards.last, isVisible: false),
       ),
     );
   }
