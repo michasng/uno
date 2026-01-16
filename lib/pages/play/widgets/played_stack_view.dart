@@ -17,7 +17,9 @@ class PlayedStackView extends StatelessWidget {
         borderRadius: BorderRadius.circular(
           GameCardView.cornerRadius.toDouble(),
         ),
-        border: BoxBorder.all(color: Colors.red, width: 2),
+        boxShadow: const [
+          BoxShadow(color: Colors.black26, spreadRadius: 2, blurRadius: 4),
+        ],
       ),
       child: cards.isEmpty ? null : GameCardView(cards.last, isVisible: true),
     );

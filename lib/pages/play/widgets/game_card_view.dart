@@ -35,31 +35,39 @@ class GameCardView extends StatelessWidget {
         ? card.number.toString()
         : card.runtimeType.toString();
 
-    return Container(
-      width: width.toDouble(),
-      height: height.toDouble(),
-      decoration: BoxDecoration(
-        color: isVisible ? color : Colors.black,
-        borderRadius: BorderRadius.circular(cornerRadius.toDouble()),
-        boxShadow: [
-          BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
-        ],
-      ),
+    return Material(
+      color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        child: Container(
-          alignment: Alignment.center,
+        borderRadius: BorderRadius.circular(cornerRadius.toDouble()),
+        child: Ink(
+          width: width.toDouble(),
+          height: height.toDouble(),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.white, width: width / 16),
+            color: isVisible ? color : Colors.black,
             borderRadius: BorderRadius.circular(cornerRadius.toDouble()),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 4,
+                offset: Offset(0, 2),
+              ),
+            ],
           ),
-          child: Text(
-            isVisible ? label : '?',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: width / 2,
-              fontWeight: FontWeight.bold,
-              shadows: [Shadow(color: Colors.black, blurRadius: width / 8)],
+          child: Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.white, width: width / 16),
+              borderRadius: BorderRadius.circular(cornerRadius.toDouble()),
+            ),
+            child: Text(
+              isVisible ? label : '?',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: width / 2,
+                fontWeight: FontWeight.bold,
+                shadows: [Shadow(color: Colors.black, blurRadius: width / 8)],
+              ),
             ),
           ),
         ),

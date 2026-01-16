@@ -11,20 +11,25 @@ class DrawStackView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: GameCardView.width.toDouble(),
-      height: GameCardView.height.toDouble(),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(
-          GameCardView.cornerRadius.toDouble(),
-        ),
-        border: BoxBorder.all(color: Colors.red, width: 2),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(
+        GameCardView.cornerRadius.toDouble(),
       ),
-      child: InkWell(
-        onTap: onTap,
+      child: Ink(
+        width: GameCardView.width.toDouble(),
+        height: GameCardView.height.toDouble(),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(
+            GameCardView.cornerRadius.toDouble(),
+          ),
+          boxShadow: const [
+            BoxShadow(color: Colors.black26, spreadRadius: 2, blurRadius: 4),
+          ],
+        ),
         child: cards.isEmpty
             ? Container()
-            : GameCardView(cards.last, isVisible: false),
+            : GameCardView(cards.last, isVisible: false, onTap: onTap),
       ),
     );
   }
