@@ -15,6 +15,7 @@ class GameState with GameStateMappable {
   final IList<GameCard> playedStack;
   final IList<PlayerState> players;
   final int turnPlayerIndex;
+  final bool hasDrawnThisTurn;
   final bool isClockwise;
   final CardColor? mandatoryColor;
   final bool isGameOver;
@@ -25,6 +26,7 @@ class GameState with GameStateMappable {
     this.playedStack = const IList.empty(),
     this.players = const IList.empty(),
     this.turnPlayerIndex = 0,
+    this.hasDrawnThisTurn = false,
     this.isClockwise = true,
     this.mandatoryColor,
     this.isGameOver = false,

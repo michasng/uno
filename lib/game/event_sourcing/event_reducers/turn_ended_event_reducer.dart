@@ -20,6 +20,9 @@ class TurnEndedEventReducer implements GameEventReducer<TurnEndedEvent> {
       }
     }
 
-    return state.copyWith(turnPlayerIndex: nextTurnPlayerIndex);
+    return state.copyWith(
+      turnPlayerIndex: nextTurnPlayerIndex,
+      hasDrawnThisTurn: false,
+    );
   }
 }

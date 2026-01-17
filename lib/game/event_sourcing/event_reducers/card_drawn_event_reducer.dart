@@ -14,6 +14,7 @@ class CardDrawnEventReducer implements GameEventReducer<CardDrawnEvent> {
         event.playerIndex,
         player.copyWith(hand: player.hand.add(drawnCard)),
       ),
+      hasDrawnThisTurn: true,
     );
   }
 }
