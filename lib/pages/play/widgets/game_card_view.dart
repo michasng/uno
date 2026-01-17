@@ -65,13 +65,6 @@ class GameCardView extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isFaceUp ? color : Colors.black,
                 borderRadius: BorderRadius.circular(cornerRadius),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 4,
-                    offset: Offset(0, 2),
-                  ),
-                ],
               ),
               child: Container(
                 alignment: Alignment.center,
