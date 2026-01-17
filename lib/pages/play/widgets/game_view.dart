@@ -97,13 +97,18 @@ class _GameViewState extends State<GameView> {
               if (gameState.drawStack.isEmpty)
                 Align(
                   alignment: drawStackAlignment,
-                  child: GestureDetector(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(
+                      GameCardView.baseCornerRadius * cardScale,
+                    ),
                     onTap: onTapDrawStack,
                     child: Container(
                       width: GameCardView.baseWidth * cardScale,
                       height: GameCardView.baseHeight * cardScale,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(GameCardView.baseCornerRadius * cardScale),
+                        borderRadius: BorderRadius.circular(
+                          GameCardView.baseCornerRadius * cardScale,
+                        ),
                         border: Border.all(color: Colors.white10, width: 2),
                       ),
                       child: const Icon(Icons.refresh, color: Colors.white10),
@@ -159,13 +164,11 @@ class _GameViewState extends State<GameView> {
       child: AnimatedRotation(
         duration: widget.animationDuration,
         turns: turns,
-        child: GestureDetector(
+        child: GameCardView(
+          card,
+          scale: cardScale,
+          isVisible: isVisible,
           onTap: onTap,
-          child: GameCardView(
-            card,
-            scale: cardScale,
-            isVisible: isVisible,
-          ),
         ),
       ),
     );
