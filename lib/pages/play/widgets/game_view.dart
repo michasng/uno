@@ -8,12 +8,7 @@ import 'package:uno/pages/play/widgets/game_card_view.dart';
 import 'package:uno/pages/play/widgets/turn_indicator.dart';
 
 class GameView extends StatefulWidget {
-  final Duration animationDuration;
-
-  const GameView({
-    super.key,
-    this.animationDuration = const Duration(milliseconds: 500),
-  });
+  const GameView({super.key});
 
   @override
   State<GameView> createState() => _GameViewState();
@@ -84,11 +79,12 @@ class _GameViewState extends State<GameView> {
             ),
 
             if (gameState.drawStack.isNotEmpty)
-              _buildCard(
+              GameCardView(
+                key: ValueKey(gameState.drawStack.last.id),
                 gameState.drawStack.last,
-                drawStackAlignment,
-                cardScale: cardScale,
-                isVisible: false,
+                scale: cardScale,
+                alignment: drawStackAlignment,
+                isFaceUp: false,
                 onTap: onTapDrawStack,
               ),
             if (gameState.drawStack.isEmpty)
@@ -114,18 +110,24 @@ class _GameViewState extends State<GameView> {
               ),
 
             for (final card in gameState.playedStack)
-              _buildCard(card, playedStackAlignment, cardScale: cardScale),
+              GameCardView(
+                key: ValueKey(card.id),
+                card,
+                scale: cardScale,
+                alignment: playedStackAlignment,
+              ),
 
             for (final (playerIndex, player) in gameState.players.indexed)
               for (final (cardIndex, card) in player.hand.indexed)
-                _buildCard(
+                GameCardView(
+                  key: ValueKey(card.id),
                   card,
-                  _determineCardAlignment(
+                  scale: cardScale,
+                  alignment: _determineCardAlignment(
                     playerIndex: playerIndex,
                     handSize: player.hand.length,
                     cardIndex: cardIndex,
                   ),
-                  cardScale: cardScale,
                   turns: playerIndex * 0.25,
                   onTap: gameState.turnPlayerIndex == playerIndex
                       ? () => onTapCard(card, playerIndex)
@@ -134,33 +136,6 @@ class _GameViewState extends State<GameView> {
           ],
         );
       },
-    );
-  }
-
-  Widget _buildCard(
-    GameCard card,
-    Alignment alignment, {
-    double turns = 0,
-    required double cardScale,
-    bool isVisible = true,
-    VoidCallback? onTap,
-  }) {
-    return AnimatedAlign(
-      key: ValueKey(card.id),
-      duration: widget.animationDuration,
-      curve: Curves.easeOutCubic,
-      alignment: alignment,
-      child: AnimatedRotation(
-        duration: widget.animationDuration,
-        // rotate the least amount necessary, clockwise or counter-clockwise
-        turns: ((turns + 0.5) % 1.0) - 0.5,
-        child: GameCardView(
-          card,
-          scale: cardScale,
-          isVisible: isVisible,
-          onTap: onTap,
-        ),
-      ),
     );
   }
 }

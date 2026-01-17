@@ -8,17 +8,22 @@ class GameCardView extends StatelessWidget {
   static const double baseWidth = 2;
   static const double baseHeight = 3;
   static const double baseCornerRadius = 0.3;
+  static const Duration animationDuration = Duration(milliseconds: 500);
 
   final GameCard card;
   final double scale;
-  final bool isVisible;
+  final Alignment alignment;
+  final double turns;
+  final bool isFaceUp;
   final VoidCallback? onTap;
 
   const GameCardView(
     this.card, {
     super.key,
     required this.scale,
-    required this.isVisible,
+    required this.alignment,
+    this.turns = 0,
+    this.isFaceUp = true,
     this.onTap,
   });
 
@@ -41,38 +46,50 @@ class GameCardView extends StatelessWidget {
     final height = baseHeight * scale;
     final cornerRadius = baseCornerRadius * scale;
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(cornerRadius),
-        child: Ink(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            color: isVisible ? color : Colors.black,
+    return AnimatedAlign(
+      duration: animationDuration,
+      curve: Curves.easeOutCubic,
+      alignment: alignment,
+      child: AnimatedRotation(
+        duration: animationDuration,
+        // rotate the least amount necessary, clockwise or counter-clockwise
+        turns: ((turns + 0.5) % 1.0) - 0.5,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
             borderRadius: BorderRadius.circular(cornerRadius),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 4,
-                offset: Offset(0, 2),
+            child: Ink(
+              width: width,
+              height: height,
+              decoration: BoxDecoration(
+                color: isFaceUp ? color : Colors.black,
+                borderRadius: BorderRadius.circular(cornerRadius),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.white, width: width / 16),
-              borderRadius: BorderRadius.circular(cornerRadius),
-            ),
-            child: Text(
-              isVisible ? label : '?',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: width / 2,
-                fontWeight: FontWeight.bold,
-                shadows: [Shadow(color: Colors.black, blurRadius: width / 8)],
+              child: Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white, width: width / 16),
+                  borderRadius: BorderRadius.circular(cornerRadius),
+                ),
+                child: Text(
+                  isFaceUp ? label : '?',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: width / 2,
+                    fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(color: Colors.black, blurRadius: width / 8),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
