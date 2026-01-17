@@ -67,76 +67,73 @@ class _GameViewState extends State<GameView> {
     final drawStackAlignment = Alignment(0.22, 0.0);
     final playedStackAlignment = Alignment(-drawStackAlignment.x, 0.0);
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF1B5E20),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final cardScale = constraints.maxWidth / GameCardView.baseWidth / 16;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final cardScale = constraints.maxWidth / GameCardView.baseWidth / 16;
 
-          return Stack(
-            children: [
-              Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TurnIndicator(turnPlayerIndex: gameState.turnPlayerIndex),
-                    SizedBox(height: 2.0 * GameCardView.baseHeight * cardScale),
-                  ],
+        return Stack(
+          children: [
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TurnIndicator(turnPlayerIndex: gameState.turnPlayerIndex),
+                  SizedBox(height: 2.0 * GameCardView.baseHeight * cardScale),
+                ],
+              ),
+            ),
+
+            if (gameState.drawStack.isNotEmpty)
+              _buildCard(
+                gameState.drawStack.last,
+                drawStackAlignment,
+                cardScale: cardScale,
+                isVisible: false,
+                onTap: onTapDrawStack,
+              ),
+            if (gameState.drawStack.isEmpty)
+              Align(
+                alignment: drawStackAlignment,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(
+                    GameCardView.baseCornerRadius * cardScale,
+                  ),
+                  onTap: onTapDrawStack,
+                  child: Container(
+                    width: GameCardView.baseWidth * cardScale,
+                    height: GameCardView.baseHeight * cardScale,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        GameCardView.baseCornerRadius * cardScale,
+                      ),
+                      border: Border.all(color: Colors.white10, width: 2),
+                    ),
+                    child: const Icon(Icons.refresh, color: Colors.white10),
+                  ),
                 ),
               ),
 
-              if (gameState.drawStack.isNotEmpty)
+            for (final card in gameState.playedStack)
+              _buildCard(card, playedStackAlignment, cardScale: cardScale),
+
+            for (final (playerIndex, player) in gameState.players.indexed)
+              for (final (cardIndex, card) in player.hand.indexed)
                 _buildCard(
-                  gameState.drawStack.last,
-                  drawStackAlignment,
+                  card,
+                  _determineCardAlignment(
+                    playerIndex: playerIndex,
+                    handSize: player.hand.length,
+                    cardIndex: cardIndex,
+                  ),
                   cardScale: cardScale,
-                  isVisible: false,
-                  onTap: onTapDrawStack,
+                  turns: playerIndex * 0.25,
+                  onTap: gameState.turnPlayerIndex == playerIndex
+                      ? () => onTapCard(card, playerIndex)
+                      : null,
                 ),
-              if (gameState.drawStack.isEmpty)
-                Align(
-                  alignment: drawStackAlignment,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(
-                      GameCardView.baseCornerRadius * cardScale,
-                    ),
-                    onTap: onTapDrawStack,
-                    child: Container(
-                      width: GameCardView.baseWidth * cardScale,
-                      height: GameCardView.baseHeight * cardScale,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          GameCardView.baseCornerRadius * cardScale,
-                        ),
-                        border: Border.all(color: Colors.white10, width: 2),
-                      ),
-                      child: const Icon(Icons.refresh, color: Colors.white10),
-                    ),
-                  ),
-                ),
-
-              for (final card in gameState.playedStack)
-                _buildCard(card, playedStackAlignment, cardScale: cardScale),
-
-              for (final (playerIndex, player) in gameState.players.indexed)
-                for (final (cardIndex, card) in player.hand.indexed)
-                  _buildCard(
-                    card,
-                    _determineCardAlignment(
-                      playerIndex: playerIndex,
-                      handSize: player.hand.length,
-                      cardIndex: cardIndex,
-                    ),
-                    cardScale: cardScale,
-                    turns: playerIndex * 0.25,
-                    onTap: gameState.turnPlayerIndex == playerIndex
-                        ? () => onTapCard(card, playerIndex)
-                        : null,
-                  ),
-            ],
-          );
-        },
-      ),
+          ],
+        );
+      },
     );
   }
 
