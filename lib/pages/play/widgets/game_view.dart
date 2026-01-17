@@ -69,64 +69,76 @@ class _GameViewState extends State<GameView> {
 
     return Scaffold(
       backgroundColor: const Color(0xFF1B5E20),
-      body: Stack(
-        children: <Widget>[
-          Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TurnIndicator(turnPlayerIndex: gameState.turnPlayerIndex),
-                const SizedBox(height: 2.0 * GameCardView.height),
-              ],
-            ),
-          ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final cardScale = constraints.maxWidth / GameCardView.baseWidth / 16;
 
-          if (gameState.drawStack.isNotEmpty)
-            _buildCard(
-              gameState.drawStack.last,
-              drawStackAlignment,
-              turns: 0,
-              isVisible: false,
-              onTap: onTapDrawStack,
-            ),
-          if (gameState.drawStack.isEmpty)
-            Align(
-              alignment: drawStackAlignment,
-              child: GestureDetector(
-                onTap: onTapDrawStack,
-                child: Container(
-                  width: GameCardView.width.toDouble(),
-                  height: GameCardView.height.toDouble(),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      GameCardView.cornerRadius.toDouble(),
+          return Stack(
+            children: <Widget>[
+              Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TurnIndicator(turnPlayerIndex: gameState.turnPlayerIndex),
+                    SizedBox(height: 2.0 * GameCardView.baseHeight * cardScale),
+                  ],
+                ),
+              ),
+
+              if (gameState.drawStack.isNotEmpty)
+                _buildCard(
+                  gameState.drawStack.last,
+                  drawStackAlignment,
+                  turns: 0,
+                  isVisible: false,
+                  cardScale: cardScale,
+                  onTap: onTapDrawStack,
+                ),
+              if (gameState.drawStack.isEmpty)
+                Align(
+                  alignment: drawStackAlignment,
+                  child: GestureDetector(
+                    onTap: onTapDrawStack,
+                    child: Container(
+                      width: GameCardView.baseWidth * cardScale,
+                      height: GameCardView.baseHeight * cardScale,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(GameCardView.baseCornerRadius * cardScale),
+                        border: Border.all(color: Colors.white10, width: 2),
+                      ),
+                      child: const Icon(Icons.refresh, color: Colors.white10),
                     ),
-                    border: Border.all(color: Colors.white10, width: 2),
                   ),
-                  child: const Icon(Icons.refresh, color: Colors.white10),
                 ),
-              ),
-            ),
 
-          for (final card in gameState.playedStack)
-            _buildCard(card, playedStackAlignment, turns: 0, isVisible: true),
-
-          for (final (playerIndex, player) in gameState.players.indexed)
-            for (final (cardIndex, card) in player.hand.indexed)
-              _buildCard(
-                card,
-                _determineCardAlignment(
-                  playerIndex: playerIndex,
-                  handSize: player.hand.length,
-                  cardIndex: cardIndex,
+              for (final card in gameState.playedStack)
+                _buildCard(
+                  card,
+                  playedStackAlignment,
+                  turns: 0,
+                  isVisible: true,
+                  cardScale: cardScale,
                 ),
-                turns: playerIndex * 0.25,
-                isVisible: true,
-                onTap: gameState.turnPlayerIndex == playerIndex
-                    ? () => onTapCard(card, playerIndex)
-                    : null,
-              ),
-        ],
+
+              for (final (playerIndex, player) in gameState.players.indexed)
+                for (final (cardIndex, card) in player.hand.indexed)
+                  _buildCard(
+                    card,
+                    _determineCardAlignment(
+                      playerIndex: playerIndex,
+                      handSize: player.hand.length,
+                      cardIndex: cardIndex,
+                    ),
+                    turns: playerIndex * 0.25,
+                    isVisible: true,
+                    cardScale: cardScale,
+                    onTap: gameState.turnPlayerIndex == playerIndex
+                        ? () => onTapCard(card, playerIndex)
+                        : null,
+                  ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -136,6 +148,7 @@ class _GameViewState extends State<GameView> {
     Alignment alignment, {
     required double turns,
     required bool isVisible,
+    required double cardScale,
     VoidCallback? onTap,
   }) {
     return AnimatedAlign(
@@ -148,7 +161,11 @@ class _GameViewState extends State<GameView> {
         turns: turns,
         child: GestureDetector(
           onTap: onTap,
-          child: GameCardView(card, isVisible: isVisible),
+          child: GameCardView(
+            card,
+            scale: cardScale,
+            isVisible: isVisible,
+          ),
         ),
       ),
     );

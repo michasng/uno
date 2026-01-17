@@ -5,17 +5,19 @@ import 'package:uno/game/models/cards/game_card.dart';
 import 'package:uno/game/models/cards/numbered_card.dart';
 
 class GameCardView extends StatelessWidget {
-  static const int width = 64;
-  static const int height = 96;
-  static const int cornerRadius = 8;
+  static const double baseWidth = 2;
+  static const double baseHeight = 3;
+  static const double baseCornerRadius = 0.3;
 
   final GameCard card;
+  final double scale;
   final bool isVisible;
   final VoidCallback? onTap;
 
   const GameCardView(
     this.card, {
     super.key,
+    required this.scale,
     required this.isVisible,
     this.onTap,
   });
@@ -35,17 +37,21 @@ class GameCardView extends StatelessWidget {
         ? card.number.toString()
         : card.runtimeType.toString();
 
+    final width = baseWidth * scale;
+    final height = baseHeight * scale;
+    final cornerRadius = baseCornerRadius * scale;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(cornerRadius.toDouble()),
+        borderRadius: BorderRadius.circular(cornerRadius),
         child: Ink(
-          width: width.toDouble(),
-          height: height.toDouble(),
+          width: width,
+          height: height,
           decoration: BoxDecoration(
             color: isVisible ? color : Colors.black,
-            borderRadius: BorderRadius.circular(cornerRadius.toDouble()),
+            borderRadius: BorderRadius.circular(cornerRadius),
             boxShadow: [
               BoxShadow(
                 color: Colors.black26,
@@ -58,7 +64,7 @@ class GameCardView extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.white, width: width / 16),
-              borderRadius: BorderRadius.circular(cornerRadius.toDouble()),
+              borderRadius: BorderRadius.circular(cornerRadius),
             ),
             child: Text(
               isVisible ? label : '?',
