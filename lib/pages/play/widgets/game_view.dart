@@ -74,7 +74,7 @@ class _GameViewState extends State<GameView> {
           final cardScale = constraints.maxWidth / GameCardView.baseWidth / 16;
 
           return Stack(
-            children: <Widget>[
+            children: [
               Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -89,9 +89,8 @@ class _GameViewState extends State<GameView> {
                 _buildCard(
                   gameState.drawStack.last,
                   drawStackAlignment,
-                  turns: 0,
-                  isVisible: false,
                   cardScale: cardScale,
+                  isVisible: false,
                   onTap: onTapDrawStack,
                 ),
               if (gameState.drawStack.isEmpty)
@@ -117,13 +116,7 @@ class _GameViewState extends State<GameView> {
                 ),
 
               for (final card in gameState.playedStack)
-                _buildCard(
-                  card,
-                  playedStackAlignment,
-                  turns: 0,
-                  isVisible: true,
-                  cardScale: cardScale,
-                ),
+                _buildCard(card, playedStackAlignment, cardScale: cardScale),
 
               for (final (playerIndex, player) in gameState.players.indexed)
                 for (final (cardIndex, card) in player.hand.indexed)
@@ -134,9 +127,8 @@ class _GameViewState extends State<GameView> {
                       handSize: player.hand.length,
                       cardIndex: cardIndex,
                     ),
-                    turns: playerIndex * 0.25,
-                    isVisible: true,
                     cardScale: cardScale,
+                    turns: playerIndex * 0.25,
                     onTap: gameState.turnPlayerIndex == playerIndex
                         ? () => onTapCard(card, playerIndex)
                         : null,
@@ -151,13 +143,13 @@ class _GameViewState extends State<GameView> {
   Widget _buildCard(
     GameCard card,
     Alignment alignment, {
-    required double turns,
-    required bool isVisible,
+    double turns = 0,
     required double cardScale,
+    bool isVisible = true,
     VoidCallback? onTap,
   }) {
     return AnimatedAlign(
-      key: ValueKey<String>(card.id),
+      key: ValueKey(card.id),
       duration: widget.animationDuration,
       curve: Curves.easeOutCubic,
       alignment: alignment,
