@@ -155,7 +155,8 @@ class _GameViewState extends State<GameView> {
       alignment: alignment,
       child: AnimatedRotation(
         duration: widget.animationDuration,
-        turns: turns,
+        // rotate the least amount necessary, clockwise or counter-clockwise
+        turns: ((turns + 0.5) % 1.0) - 0.5,
         child: GameCardView(
           card,
           scale: cardScale,
