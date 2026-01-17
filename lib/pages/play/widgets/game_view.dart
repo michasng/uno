@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uno/game/game.dart';
 import 'package:uno/game/models/cards/game_card.dart';
 import 'package:uno/game/models/commands/draw_card_command.dart';
+import 'package:uno/game/models/commands/pass_turn_command.dart';
 import 'package:uno/game/models/commands/play_card_command.dart';
 import 'package:uno/game/models/state/game_state.dart';
 import 'package:uno/pages/play/widgets/game_card_view.dart';
@@ -26,13 +27,24 @@ class _GameViewState extends State<GameView> {
     game = Game(playerCount: 4, handSize: 7);
   }
 
-  void onTapDrawStack() {
-    setState(() {
-      game.process(DrawCardCommand());
-    });
+  void _onTapDrawStack() {
+    if (gameState.isGameOver) return;
+
+    if (gameState.hasDrawnThisTurn ||
+        (gameState.drawStack.isEmpty && gameState.playedStack.length <= 1)) {
+      setState(() {
+        game.process(PassTurnCommand());
+      });
+    } else {
+      setState(() {
+        game.process(DrawCardCommand());
+      });
+    }
   }
 
-  void onTapCard(GameCard card, int playerIndex) {
+  void _onTapCard(GameCard card, int playerIndex) {
+    if (gameState.isGameOver) return;
+
     final cardIndex = gameState.players[playerIndex].hand.indexOf(card);
 
     setState(() {
@@ -85,7 +97,7 @@ class _GameViewState extends State<GameView> {
                 scale: cardScale,
                 alignment: drawStackAlignment,
                 isFaceUp: false,
-                onTap: onTapDrawStack,
+                onTap: _onTapDrawStack,
               ),
             if (gameState.drawStack.isEmpty)
               Align(
@@ -94,7 +106,7 @@ class _GameViewState extends State<GameView> {
                   borderRadius: BorderRadius.circular(
                     GameCardView.baseCornerRadius * cardScale,
                   ),
-                  onTap: onTapDrawStack,
+                  onTap: _onTapDrawStack,
                   child: Container(
                     width: GameCardView.baseWidth * cardScale,
                     height: GameCardView.baseHeight * cardScale,
@@ -130,7 +142,7 @@ class _GameViewState extends State<GameView> {
                   ),
                   turns: playerIndex * 0.25,
                   onTap: gameState.turnPlayerIndex == playerIndex
-                      ? () => onTapCard(card, playerIndex)
+                      ? () => _onTapCard(card, playerIndex)
                       : null,
                 ),
           ],

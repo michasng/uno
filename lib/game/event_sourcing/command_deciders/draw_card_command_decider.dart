@@ -4,7 +4,6 @@ import 'package:uno/game/models/commands/draw_card_command.dart';
 import 'package:uno/game/models/events/card_drawn_event.dart';
 import 'package:uno/game/models/events/draw_stack_shuffled_event.dart';
 import 'package:uno/game/models/events/stack_recycled_event.dart';
-import 'package:uno/game/models/events/turn_ended_event.dart';
 import 'package:uno/game/models/game_event.dart';
 import 'package:uno/game/models/state/game_state.dart';
 
@@ -15,11 +14,13 @@ class DrawCardCommandDecider implements GameCommandDecider<DrawCardCommand> {
       throw InvalidCommandException('Game is over');
     }
 
+    if (state.hasDrawnThisTurn) {
+      throw InvalidCommandException('Player already drew this turn');
+    }
+
     if (state.drawStack.isEmpty) {
       if (state.playedStack.length <= 1) {
-        // can't draw, but no error
-        yield TurnEndedEvent();
-        return;
+        throw InvalidCommandException('There are no cards to draw');
       }
 
       yield StackRecycledEvent();
@@ -27,6 +28,5 @@ class DrawCardCommandDecider implements GameCommandDecider<DrawCardCommand> {
     }
 
     yield CardDrawnEvent(playerIndex: state.turnPlayerIndex);
-    yield TurnEndedEvent();
   }
 }

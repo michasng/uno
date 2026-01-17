@@ -1,5 +1,6 @@
 import 'package:replay/replay.dart';
 import 'package:uno/game/event_sourcing/command_deciders/draw_card_command_decider.dart';
+import 'package:uno/game/event_sourcing/command_deciders/pass_turn_command_decider.dart';
 import 'package:uno/game/event_sourcing/command_deciders/play_card_command_decider.dart';
 import 'package:uno/game/event_sourcing/command_deciders/start_game_command_decider.dart';
 import 'package:uno/game/event_sourcing/event_reducers/card_drawn_event_reducer.dart';
@@ -11,6 +12,7 @@ import 'package:uno/game/event_sourcing/event_reducers/stack_card_played_event_r
 import 'package:uno/game/event_sourcing/event_reducers/stack_recycled_event_reducer.dart';
 import 'package:uno/game/event_sourcing/event_reducers/turn_ended_event_reducer.dart';
 import 'package:uno/game/models/commands/draw_card_command.dart';
+import 'package:uno/game/models/commands/pass_turn_command.dart';
 import 'package:uno/game/models/commands/play_card_command.dart';
 import 'package:uno/game/models/commands/start_game_command.dart';
 import 'package:uno/game/models/events/card_drawn_event.dart';
@@ -33,6 +35,7 @@ class Game {
         initialState: GameState(), // stub, will be replaced by command
         commandDecider: ComposableCommandDecider({
           DrawCardCommand: DrawCardCommandDecider(),
+          PassTurnCommand: PassTurnCommandDecider(),
           PlayCardCommand: PlayCardCommandDecider(),
           StartGameCommand: StartGameCommandDecider(),
         }),
