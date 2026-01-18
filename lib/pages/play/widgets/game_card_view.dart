@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uno/game/models/cards/card_color.dart';
-import 'package:uno/game/models/cards/colored.dart';
+import 'package:uno/game/models/cards/colored_card.dart';
 import 'package:uno/game/models/cards/game_card.dart';
 import 'package:uno/game/models/cards/numbered_card.dart';
 

@@ -17,12 +17,9 @@ class PlayCardCommandDecider implements GameCommandDecider<PlayCardCommand> {
       throw InvalidCommandException("Card doesn't exist");
     }
 
-    final cardToPlay = state.turnPlayer.hand[command.cardIndex];
-    final playedOnCard = state.playedStack.last;
-    if (!cardToPlay.canBePlayedOn(playedOnCard)) {
-      throw InvalidCommandException(
-        "Card $cardToPlay can't be played on $playedOnCard",
-      );
+    final card = state.turnPlayer.hand[command.cardIndex];
+    if (!state.canPlay(card)) {
+      throw InvalidCommandException('Cannot play $card');
     }
 
     yield CardPlayedEvent(

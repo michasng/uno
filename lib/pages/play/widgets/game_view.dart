@@ -47,7 +47,7 @@ class _GameViewState extends State<GameView> {
 
     final cardIndex = gameState.players[playerIndex].hand.indexOf(card);
 
-    if (card.canBePlayedOn(gameState.playedStack.last)) {
+    if (gameState.canPlay(card)) {
       setState(() {
         game.process(PlayCardCommand(cardIndex: cardIndex));
       });

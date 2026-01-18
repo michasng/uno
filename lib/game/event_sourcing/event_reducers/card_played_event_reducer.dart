@@ -1,4 +1,6 @@
 import 'package:uno/game/event_sourcing/event_reducers/game_event_reducer.dart';
+import 'package:uno/game/models/cards/colored_card.dart';
+import 'package:uno/game/models/cards/numbered_card.dart';
 import 'package:uno/game/models/events/card_played_event.dart';
 import 'package:uno/game/models/state/game_state.dart';
 
@@ -13,6 +15,8 @@ class CardPlayedEventReducer implements GameEventReducer<CardPlayedEvent> {
         event.playerIndex,
         player.copyWith(hand: player.hand.removeAt(event.cardIndex)),
       ),
+      mandatoryColor: card is ColoredCard ? card.color : null,
+      mandatoryNumber: card is NumberedCard ? card.number : null,
     );
   }
 }
