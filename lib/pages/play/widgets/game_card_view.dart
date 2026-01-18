@@ -3,6 +3,7 @@ import 'package:uno/game/models/cards/card_color.dart';
 import 'package:uno/game/models/cards/colored_card.dart';
 import 'package:uno/game/models/cards/game_card.dart';
 import 'package:uno/game/models/cards/numbered_card.dart';
+import 'package:uno/game/models/cards/reverse_card.dart';
 
 class GameCardView extends StatelessWidget {
   static const double baseWidth = 2;
@@ -27,21 +28,24 @@ class GameCardView extends StatelessWidget {
     this.onTap,
   });
 
+  Color get _color {
+    final card = this.card; // to enable type-narrowing
+    if (!isFaceUp) return Colors.black;
+
+    if (card is ColoredCard) {
+      return switch (card.color) {
+        CardColor.red => Colors.red,
+        CardColor.blue => Colors.blue,
+        CardColor.green => Colors.green,
+        CardColor.yellow => Colors.yellow,
+      };
+    }
+
+    return Colors.black;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final card = this.card; // to enable type-narrowing
-    final color = card is ColoredCard
-        ? switch (card.color) {
-            CardColor.red => Colors.red,
-            CardColor.blue => Colors.blue,
-            CardColor.green => Colors.green,
-            CardColor.yellow => Colors.yellow,
-          }
-        : Colors.black;
-    final label = card is NumberedCard
-        ? card.number.toString()
-        : card.runtimeType.toString();
-
     final width = baseWidth * scale;
     final height = baseHeight * scale;
     final cornerRadius = baseCornerRadius * scale;
@@ -63,7 +67,7 @@ class GameCardView extends StatelessWidget {
               width: width,
               height: height,
               decoration: BoxDecoration(
-                color: isFaceUp ? color : Colors.black,
+                color: _color,
                 borderRadius: BorderRadius.circular(cornerRadius),
               ),
               child: Container(
@@ -72,8 +76,7 @@ class GameCardView extends StatelessWidget {
                   border: Border.all(color: Colors.white, width: width / 16),
                   borderRadius: BorderRadius.circular(cornerRadius),
                 ),
-                child: Text(
-                  isFaceUp ? label : '?',
+                child: DefaultTextStyle(
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: width / 2,
@@ -82,6 +85,10 @@ class GameCardView extends StatelessWidget {
                       Shadow(color: Colors.black, blurRadius: width / 8),
                     ],
                   ),
+                  child: IconTheme(
+                    data: IconThemeData(size: width / 2, color: Colors.white),
+                    child: _buildChild(),
+                  ),
                 ),
               ),
             ),
@@ -89,5 +96,21 @@ class GameCardView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildChild() {
+    final card = this.card; // to enable type-narrowing
+
+    if (!isFaceUp) return Text('?');
+
+    if (card is NumberedCard) {
+      return Text(card.number.toString());
+    }
+
+    if (card is ReverseCard) {
+      return Icon(Icons.sync);
+    }
+
+    return Text(card.runtimeType.toString());
   }
 }

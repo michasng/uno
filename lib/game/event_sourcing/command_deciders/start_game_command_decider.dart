@@ -6,6 +6,7 @@ import 'package:uno/game/event_sourcing/command_deciders/game_command_decider.da
 import 'package:uno/game/models/cards/card_color.dart';
 import 'package:uno/game/models/cards/game_card.dart';
 import 'package:uno/game/models/cards/numbered_card.dart';
+import 'package:uno/game/models/cards/reverse_card.dart';
 import 'package:uno/game/models/commands/start_game_command.dart';
 import 'package:uno/game/models/events/card_drawn_event.dart';
 import 'package:uno/game/models/events/draw_stack_shuffled_event.dart';
@@ -16,22 +17,23 @@ import 'package:uno/game/models/state/game_state.dart';
 import 'package:uno/game/models/state/player_state.dart';
 
 class StartGameCommandDecider implements GameCommandDecider<StartGameCommand> {
-  IList<GameCard> createCards() {
+  Iterable<GameCard> createCards() sync* {
     int cardCount = 0;
-    return [
-      for (var color in CardColor.values)
-        for (var number in List.generate(10, (index) => index))
-          NumberedCard(
-            id: (cardCount++).toString(),
-            color: color,
-            number: number,
-          ),
-    ].toIList();
+    for (var color in CardColor.values) {
+      for (var number in List.generate(10, (index) => index)) {
+        yield NumberedCard(
+          id: (cardCount++).toString(),
+          color: color,
+          number: number,
+        );
+      }
+      yield ReverseCard(id: (cardCount++).toString(), color: color);
+    }
   }
 
   @override
   Iterable<GameEvent> decide(StartGameCommand command, GameState state) sync* {
-    final cards = createCards();
+    final cards = createCards().toIList();
 
     final minimumCardCount = command.playerCount * command.handSize + 1;
     if (cards.length < minimumCardCount) {

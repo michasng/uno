@@ -38,12 +38,24 @@ class GameState with GameStateMappable {
 
   PlayerState get turnPlayer => players[turnPlayerIndex];
 
-  bool canPlay(GameCard card) =>
-      (mandatoryColor == null && mandatoryNumber == null) ||
-      (mandatoryColor != null &&
-          card is ColoredCard &&
-          card.color == mandatoryColor) ||
-      (mandatoryNumber != null &&
-          card is NumberedCard &&
-          card.number == mandatoryNumber);
+  bool canPlay(GameCard card) {
+    if (mandatoryColor == null && mandatoryNumber == null) {
+      return true;
+    }
+
+    if (mandatoryColor != null &&
+        card is ColoredCard &&
+        card.color == mandatoryColor) {
+      return true;
+    }
+
+    if (mandatoryNumber != null &&
+        card is NumberedCard &&
+        card.number == mandatoryNumber) {
+      return true;
+    }
+
+    return (card.runtimeType != NumberedCard &&
+        card.runtimeType == playedStack.last.runtimeType);
+  }
 }
