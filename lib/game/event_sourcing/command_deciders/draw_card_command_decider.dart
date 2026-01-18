@@ -27,6 +27,9 @@ class DrawCardCommandDecider implements GameCommandDecider<DrawCardCommand> {
       yield DrawStackShuffledEvent();
     }
 
-    yield CardDrawnEvent(playerIndex: state.turnPlayerIndex);
+    yield CardDrawnEvent(
+      playerIndex: state.turnPlayerIndex,
+      countsAsTurnDraw: true,
+    );
   }
 }

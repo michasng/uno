@@ -56,7 +56,7 @@ class StartGameCommandDecider implements GameCommandDecider<StartGameCommand> {
 
     for (int i = 0; i < command.handSize; i++) {
       for (int j = 0; j < command.playerCount; j++) {
-        yield CardDrawnEvent(playerIndex: j);
+        yield CardDrawnEvent(playerIndex: j, countsAsTurnDraw: false);
       }
     }
 

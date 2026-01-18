@@ -8,6 +8,10 @@ part 'card_drawn_event.mapper.dart';
 @MappableClass()
 class CardDrawnEvent with CardDrawnEventMappable implements GameEvent {
   final int playerIndex;
+  final bool countsAsTurnDraw;
 
-  const CardDrawnEvent({required this.playerIndex});
+  const CardDrawnEvent({
+    required this.playerIndex,
+    required this.countsAsTurnDraw,
+  });
 }
