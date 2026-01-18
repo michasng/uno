@@ -79,7 +79,7 @@ class GameCardView extends StatelessWidget {
                 child: DefaultTextStyle(
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: width / 2,
+                    fontSize: width / 3,
                     fontWeight: FontWeight.bold,
                     shadows: [
                       Shadow(color: Colors.black, blurRadius: width / 8),
@@ -101,7 +101,7 @@ class GameCardView extends StatelessWidget {
   Widget _buildChild() {
     final card = this.card; // to enable type-narrowing
 
-    if (!isFaceUp) return Text('?');
+    if (!isFaceUp) return Text('UNO');
 
     if (card is NumberedCard) {
       return Text(card.number.toString());
