@@ -20,14 +20,18 @@ class StartGameCommandDecider implements GameCommandDecider<StartGameCommand> {
   Iterable<GameCard> createCards() sync* {
     int cardCount = 0;
     for (var color in CardColor.values) {
-      for (var number in List.generate(10, (index) => index)) {
-        yield NumberedCard(
-          id: (cardCount++).toString(),
-          color: color,
-          number: number,
-        );
+      // there is only one 0, but two of any other numbered / colored card
+      yield NumberedCard(id: (cardCount++).toString(), color: color, number: 0);
+      for (int i = 0; i < 2; i++) {
+        for (int number = 1; number < 10; number++) {
+          yield NumberedCard(
+            id: (cardCount++).toString(),
+            color: color,
+            number: number,
+          );
+        }
+        yield ReverseCard(id: (cardCount++).toString(), color: color);
       }
-      yield ReverseCard(id: (cardCount++).toString(), color: color);
     }
   }
 
